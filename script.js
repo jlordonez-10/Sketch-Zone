@@ -1,22 +1,24 @@
-import { drawSmooth } from "./canvas.js";
+import { clearCanvas, drawShape, drawSmooth, resizeCanvas } from "./canvas.js";
 
 const canvas = document.querySelector("canvas");
 const outerRadiusInput = document.querySelector("#outer-radius input");
 const colorPickers = document.querySelector(".color-pickers");
+const modeButtons = document.querySelector(".mode-buttons");
+const innerRadiusInput = document.querySelector("#inner-radius input");
+const numberOfSidesInput = document.querySelector("#number-of-sides input");
+const clearButton = document.querySelector("#clear");
+const downloadButton = document.querySelector("#download");
 
 let isDrawing = false;
 let hue = 0;
 let colorPicked = null;
 let lastX;
 let lastY;
+let drawingMode = "smooth";
 
 window.addEventListener("mousemove", (e) => {
     if (isDrawing) {
-        const outerRadius = outerRadiusInput.value;
-        drawSmooth(lastX, lastY, e.x, e.y, outerRadius, hue, colorPicked);
-        lastX = e.x;
-        lastY = e.y;
-        hue += 0.5;
+        draw(e.x, e.y);
     }
 });
 
@@ -57,4 +59,66 @@ colorPickers.addEventListener("click", (e) => {
     );
 
     colorPicker.parentElement.classList.add("active");
+});
+
+modeButtons.addEventListener("click", (e) => {
+    const selectedButton = e.target;
+
+    [...modeButtons.children].forEach((button) => {
+        button.classList.remove("active");
+    });
+
+    selectedButton.classList.add("active");
+
+    drawingMode = selectedButton.id;
+});
+
+const draw = (x, y) => {
+    const outerRadius = outerRadiusInput.value;
+    const innerRadius = innerRadiusInput.value;
+    const numberOfSides = numberOfSidesInput.value;
+
+    if (drawingMode === "smooth") {
+        drawSmooth(lastX, lastY, x, y, outerRadius, hue, colorPicked);
+    }
+    if (drawingMode === "shape") {
+        drawShape(
+            x,
+            y,
+            outerRadius,
+            innerRadius,
+            numberOfSides,
+            hue,
+            colorPicked
+        );
+    }
+    if (drawingMode === "eraser") {
+        drawSmooth(lastX, lastY, x, y, outerRadius);
+    }
+
+    lastX = x;
+    lastY = y;
+    hue += 0.5;
+};
+
+clearButton.addEventListener("click", clearCanvas);
+
+downloadButton.addEventListener("click", () => {
+    const a = document.createElement("a");
+    a.download = `${new Date().getTime()}.jpg`;
+    a.href = canvas.toDataURL();
+    a.click();
+});
+
+window.addEventListener("resize", resizeCanvas);
+
+window.addEventListener("touchend", () => {
+    isDrawing = false;
+});
+
+window.addEventListener("touchstart", (e) => {
+    if (isDrawing) {
+        const touch = e.touches[0];
+        draw(touch.clientX, touch.clientY);
+    }
 });

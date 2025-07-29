@@ -112,3 +112,71 @@ canvas {
 .color-container.active {
     border: 1px solid black;
 }
+
+.mode-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mode-buttons button {
+    all: unset;
+    background-color: white;
+    color: var(--blue);
+    border: 1px solid var(--blue);
+    padding: 10px 18px;
+    width: 60px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+
+.mode-buttons button:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-right-width: 0;
+}
+
+.mode-buttons button:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-left-width: 0;
+}
+
+.mode-buttons button.active {
+    background-color: var(--blue);
+    color: white;
+}
+
+#clear {
+    all: unset;
+    background-color: var(--red);
+    color: white;
+    padding: 5px 9px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid white;
+    transition: 0.3s ease all;
+}
+#clear:hover {
+    background-color: white;
+    border: 1px solid var(--red);
+    color: var(--red);
+}
+
+#download {
+    all: unset;
+    background-color: var(--blue);
+    color: white;
+    padding: 5px 9px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid white;
+    transition: 0.3s ease all;
+}
+
+#download:hover {
+    background-color: white;
+    border: 1px solid var(--blue);
+    color: var(--blue);
+}
